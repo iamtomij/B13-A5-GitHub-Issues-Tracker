@@ -11,7 +11,7 @@ loginBtn.addEventListener("click", function () {
       localStorage.setItem("isLoggedIn", "true");
 
       // redirect to main page
-      window.location.href = "index.html";
+      window.location.href = "main.html";
 
    } else {
       alert("Invalid username or password");
