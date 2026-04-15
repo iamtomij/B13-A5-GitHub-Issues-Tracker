@@ -4,6 +4,8 @@
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>GitHub | Issue Tracker</title>
+      <link rel="shortcut icon" href="./assets/github-logo.png"
+         type="image/x-icon">
       <link rel="stylesheet" href="./style.css">
 
       <!-- font awesome cdn -->
@@ -26,16 +28,42 @@
          src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
    </head>
-   <body>
-      <h1>GitHub Issue Tracker </h1>
-      <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-         Reprehenderit, magnam asperiores omnis nobis cumque quis maiores dolore
-         commodi similique, harum fugit illo deserunt iusto molestias incidunt
-         numquam perferendis quae natus corporis ipsum dignissimos. Deleniti
-         dicta soluta distinctio possimus perspiciatis optio architecto nisi
-         recusandae, nobis veniam enim repudiandae nostrum vero assumenda.
+   <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+      <div
+         class="bg-white p-8 rounded-xl shadow-md w-full max-w-md space-y-4">
 
-      </p>
+         <!-- Title -->
+         <div class="justify-center flex">
+            <img src="./assets/github-logo.png" alt="GitHub Logo">
+         </div>
+         <h1 class="text-2xl font-semibold text-center">GitHub Issues
+            Tracker</h1>
+         <p class="text-[#64748B] text-center">Sign in to manage your issues</p>
+
+         <!-- Inputs -->
+         <h2 class="justify-start text-[16px] font-medium">Username</h2>
+         <input id="username" type="text" placeholder="Enter Username"
+            class="input input-bordered w-full">
+         <h2 class="justify-start text-[16px] font-medium">Password</h2>
+         <input id="password" type="password" placeholder="Enter Password"
+            class="input input-bordered w-full">
+
+         <!-- Button -->
+         <button id="btn-login" class="btn btn-primary w-full text-[16px] font-medium text-[#FFFFFF]">
+            Sign In
+         </button>
+
+         <!-- Demo -->
+         <h4 class="text-[14px] font-normal text-[#64748B] text-center">Demo Credentials:</h4>
+         <div class="text-center mt-2 bg-[#64748B10] p-4 rounded-lg">
+            <p class="text-sm text-[#64748B]">
+               <span class="font-semibold text-[16px]">Username:</span> admin
+               <br>
+               <span class="font-semibold text-[16px]">Password:</span> admin123
+            </p>
+         </div>
+
+      </div>
 
    </body>
 </html>
