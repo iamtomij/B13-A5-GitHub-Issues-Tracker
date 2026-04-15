@@ -43,11 +43,11 @@
 
             <!-- SEARCH -->
             <div class="flex items-center gap-2">
-               <input type="text"
+               <input id="search-input" type="text"
                   placeholder="Search issues..."
                   class="input input-bordered w-64 h-9">
 
-               <button class="btn btn-primary btn-sm h-9 px-4">
+               <button id="btn-search" class="btn btn-primary btn-sm h-9 px-4">
                   Search
                </button>
             </div>
@@ -62,9 +62,10 @@
          <!-- TABS -->
          <div class="flex gap-3 mb-6">
 
-            <button class="btn btn-sm btn-outline">All</button>
-            <button class="btn btn-sm btn-outline">Open</button>
-            <button class="btn btn-sm btn-outline">Closed</button>
+            <button id="btn-all" class="btn btn-sm btn-outline">All</button>
+            <button id="btn-open" class="btn btn-sm btn-outline">Open</button>
+            <button id="btn-closed"
+               class="btn btn-sm btn-obutton">Closed</button>
 
          </div>
 
@@ -99,7 +100,7 @@
                </span>
             </div>
          </div>
-         
+
          <!-- ISSUE GRID -->
          <div id="spinner" class="flex justify-center my-10 hidden">
             <span class="loading loading-spinner loading-lg"></span>
@@ -112,6 +113,21 @@
          </div>
 
       </main>
+      <dialog id="issue_modal" class="modal">
+         <div class="modal-box max-w-xl">
+
+            <div id="modal-content" class="space-y-3">
+               <!-- dynamic content -->
+            </div>
+
+            <div class="modal-action">
+               <form method="dialog">
+                  <button class="btn">Close</button>
+               </form>
+            </div>
+
+         </div>
+      </dialog>
 
       <script src="./JS/main.js"></script>
 
