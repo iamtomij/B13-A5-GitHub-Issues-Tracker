@@ -23,25 +23,32 @@ let allIssues = [];
 
 // load all issues
 const loadIssues = async () => {
-   spinner.classList.remove("hidden");
+   try {
+      spinner.classList.remove("hidden");
 
-   const res = await fetch(API_URL);
-   const data = await res.json();
+      const res = await fetch(API_URL);
+      const data = await res.json();
 
-   allIssues = data.data;
+      allIssues = data.data;
 
-   displayIssues(allIssues);
-
-   spinner.classList.add("hidden");
+      displayIssues(allIssues);
+   } catch (err) {
+      // console.error("Error loading issues:", err);
+   } finally {
+      spinner.classList.add("hidden");
+   }
 };
 
 // display issues
 const displayIssues = (issues) => {
-
    issueContainer.innerHTML = "";
 
-   issues.forEach(issue => {
+   if (issues.length === 0) {
+      issueContainer.innerHTML = `<p class="text-center text-gray-500">No issues found</p>`;
+      return;
+   }
 
+   issues.forEach(issue => {
       const card = document.createElement("div");
 
       const borderColor =
@@ -50,20 +57,56 @@ const displayIssues = (issues) => {
             : "border-t-4 border-purple-500";
 
       card.className = `
-         bg-white p-4 rounded shadow-sm ${borderColor}
+         bg-white p-7 rounded shadow-sm ${borderColor}
          cursor-pointer hover:shadow-md transition
       `;
 
       card.innerHTML = `
-         <h2 class="font-semibold text-sm mb-2">${issue.title}</h2>
-         <p class="text-xs text-gray-500 mb-3">
-            ${issue.description.slice(0, 80)}...
+         <h2 class="font-semibold text-[14px] mb-2">${issue.title}</h2>
+
+         <p class="text-[12px] text-gray-500 mb-3 line-clamp-2">
+            ${issue.description}...
          </p>
-         <div class="text-xs space-y-1">
-            <p><strong>Status:</strong> ${issue.status}</p>
+         
+
+
+         <div class="mb-3 flex flex-wrap gap-1">${issue.labels.map(label =>{
+         let colorClass = "";
+         if (label.toLowerCase() === "bug") {
+            colorClass = "bg-[#EF444440] text-error-content";
+         }
+         else if (label.toLowerCase() === "documentation") {
+            colorClass = "bg-[#4A00FF40]";
+         }
+         else if (label.toLowerCase() === "duplicate") {
+            colorClass = "bg-[#A855F740] text-secondary-content";
+         }
+         else if (label.toLowerCase() === "enhancement") {
+            colorClass = "bg-[#BBF7D040] text-accent-content";
+         }
+         else if (label.toLowerCase() === "good first issue") {
+            colorClass = "bg-[#9CA3AF40] text-accent-content";
+         }
+         else if (label.toLowerCase() === "help wanted") {
+            colorClass = "bg-[#FDE68A40] text-info-content";
+         }
+         else {
+            colorClass = "bg-gray-200";
+         }
+
+         return `
+         <button class="text-[10px] px-2 py-[2px] rounded ${colorClass}">
+            ${label.toUpperCase()}
+         </button>
+         `;}).join("")}
+         </div>
+
+         <hr class="border-gray-200" />
+
+         <div class="text-xs space-y-2 mt-2">
+            
             <p><strong>Author:</strong> ${issue.author}</p>
-            <p><strong>Priority:</strong> ${issue.priority}</p>
-            <p><strong>Label:</strong> ${issue.label}</p>
+            <p><strong>Created At:</strong> ${new Date(issue.createdAt).toLocaleString()}</p>
          </div>
       `;
 
@@ -78,23 +121,28 @@ const displayIssues = (issues) => {
 
 // single issue
 const loadSingleIssue = async (id) => {
-   const res = await fetch(SINGLE_API + id);
-   const data = await res.json();
-   showModal(data.data);
+   try {
+      const res = await fetch(SINGLE_API + id);
+      const data = await res.json();
+      showModal(data.data);
+   } catch (err) {
+      // console.error("Error loading single issue:", err);
+   }
 };
 
 // modal show
 const showModal = (issue) => {
    modalContent.innerHTML = `
-      <h2 class="text-lg font-bold">${issue.title}</h2>
-      <p class="text-sm text-gray-500">${issue.description}</p>
+      <h2 class="text-lg font-bold mb-2">${issue.title}</h2>
+      
+      <p class="text-sm text-gray-500 mb-3">${issue.description}</p>
 
-      <div class="text-sm space-y-1">
+      <div class="text-sm space-y-2 mt-2">
          <p><strong>Status:</strong> ${issue.status}</p>
          <p><strong>Author:</strong> ${issue.author}</p>
          <p><strong>Priority:</strong> ${issue.priority}</p>
-         <p><strong>Label:</strong> ${issue.label}</p>
-         <p><strong>Created At:</strong> ${issue.createdAt}</p>
+         <p><strong>Labels:</strong> ${issue.labels.join(", ")}</p>
+         <p><strong>Created At:</strong> ${new Date(issue.createdAt).toLocaleString()}</p>
       </div>
    `;
 
@@ -130,23 +178,33 @@ btnClosed.addEventListener("click", () => {
    displayIssues(closedIssues);
 });
 
-// 🔍 search functionality
+// search functionality
 btnSearch.addEventListener("click", async () => {
-
-   const text = searchInput.value;
+   const text = searchInput.value.trim();
 
    if (!text) return;
 
-   spinner.classList.remove("hidden");
+   try {
+      spinner.classList.remove("hidden");
 
-   const res = await fetch(SEARCH_API + text);
-   const data = await res.json();
+      const res = await fetch(SEARCH_API + text);
+      const data = await res.json();
 
-   displayIssues(data.data);
-
-   spinner.classList.add("hidden");
+      displayIssues(data.data);
+   } catch (err) {
+      // console.error("Search error:", err);
+   } finally {
+      spinner.classList.add("hidden");
+   }
 });
 
-// initial
+// enter press search
+searchInput.addEventListener("keypress", (e) => {
+   if (e.key === "Enter") {
+      btnSearch.click();
+   }
+});
+
+// initial load
 loadIssues();
 setActive(btnAll);
