@@ -54,60 +54,61 @@ const displayIssues = (issues) => {
       const borderColor =
          issue.status === "open"
             ? "border-t-4 border-green-500"
-            : "border-t-4 border-purple-500";
+            : "border-t-4 border-[#A855F7]";
 
       card.className = `
          bg-white p-7 rounded shadow-sm ${borderColor}
-         cursor-pointer hover:shadow-md transition
+         cursor-pointer hover:shadow-md transition space-y-3
       `;
 
       card.innerHTML = `
-         <h2 class="font-semibold text-[14px] mb-2">${issue.title}</h2>
+         <h2 class="font-semibold text-[14px] mb-2 line-clamp-1">${issue.title}</h2>
 
-         <p class="text-[12px] text-gray-500 mb-3 line-clamp-2">
+         <p class="text-[12px] text-[#64748B] mb-3 line-clamp-2">
             ${issue.description}...
          </p>
          
 
 
-         <div class="mb-3 flex flex-wrap gap-1">${issue.labels.map(label => {
+         <div class="mb-4 flex flex-wrap gap-1">${issue.labels.map(label => {
          let colorClass = "";
          if (label.toLowerCase() === "bug") {
-            colorClass = "bg-[#EF444440] text-error-content";
+            colorClass = "font-medium bg-red-200 text-red-600 rounded-full px-3 py-2";
          }
          else if (label.toLowerCase() === "documentation") {
-            colorClass = "bg-[#4A00FF40]";
+            colorClass = "font-medium bg-gray-200 text-black rounded-full";
          }
          else if (label.toLowerCase() === "duplicate") {
-            colorClass = "bg-[#A855F740] text-secondary-content";
+            colorClass = "font-medium bg-[#A855F740] text-secondary-content rounded-full";
          }
          else if (label.toLowerCase() === "enhancement") {
-            colorClass = "bg-[#BBF7D040] text-accent-content";
+            colorClass = "font-medium bg-[#BBF7D0] text-[#00A96E] rounded-full";
          }
          else if (label.toLowerCase() === "good first issue") {
-            colorClass = "bg-[#9CA3AF40] text-accent-content";
+            colorClass = "font-medium bg-[#9CA3AF40] text-accent-content rounded-full";
          }
          else if (label.toLowerCase() === "help wanted") {
-            colorClass = "bg-[#FDE68A40] text-info-content";
+            colorClass = "font-medium bg-yellow-200 text-yellow-700 rounded-full px-3 py-2";
          }
          else {
-            colorClass = "bg-gray-200";
+            colorClass = "font-medium bg-gray-200 ";
          }
 
          return `
          <button class="text-[10px] px-2 py-[2px] rounded ${colorClass}">
             ${label.toUpperCase()}
+            
          </button>
          `;
       }).join("")}
          </div>
 
-         <hr class="border-gray-200" />
+         <hr class="border-gray-200 " />
 
          <div class="text-xs space-y-2 mt-2">
             
-            <p><strong>Author:</strong> ${issue.author}</p>
-            <p><strong>Created At:</strong> ${new Date(issue.createdAt).toLocaleString()}</p>
+            <p class="font-normal text-[12px] text-[#64748B]"># ${issue.author}</p>
+            <p class="font-normal text-[12px] text-[#64748B]"> ${new Date(issue.createdAt).toLocaleString()}</p>
          </div>
       `;
 
@@ -131,15 +132,12 @@ const loadSingleIssue = async (id) => {
    }
 };
 
-// modal show
 const showModal = (issue) => {
 
-   // 🔥 Status color
    const statusClass = issue.status.toLowerCase() === "open"
       ? "badge-success"
       : "badge-primary";
 
-   // 🔥 Priority color
    let priorityClass = "";
    if (issue.priority.toLowerCase() === "high") {
       priorityClass = "badge-error";
@@ -152,16 +150,17 @@ const showModal = (issue) => {
    modalContent.innerHTML = `
     
     <!-- Title -->
-    <h2 class="text-xl font-semibold mb-2">
+    <h2 class="text-[24px] font-bold mb-2">
       ${issue.title}
     </h2>
 
     <!-- Status + Meta -->
-    <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
-      <span class="badge ${statusClass} badge-sm capitalize">
+    <div class="flex items-center gap-7 text-sm text-gray-500 mb-3 ">
+      <span class="badge ${statusClass} badge-md rounded-3xl font-medium text-[12px] capitalize">
         ${issue.status}
       </span>
-      <span>Opened by ${issue.assignee}</span>
+      <span class="text-[12px] font-normal">Opened by ${issue.author}</span>
+      <span class="text-[12px] font-normal">${issue.createdAt}</span>
     </div>
 
     <!-- Labels -->
@@ -190,7 +189,7 @@ const showModal = (issue) => {
     <p class="text-sm text-gray-600 mb-4">
       ${issue.description}
     </p>
-    <div class="bg-gray-100 p-4 rounded-lg flex justify-between items-center mb-4">
+    <div class="bg-gray-100 p-4 rounded-lg flex items-center gap-20 mb-4">
       
       <div>
         <p class="text-sm text-gray-500">Assignee:</p>

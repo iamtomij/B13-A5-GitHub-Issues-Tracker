@@ -37,18 +37,19 @@
             class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
 
             <!-- LOGO -->
-            <div class="text-xl font-bold flex justify-between items-center gap-3">
+            <div class=" flex justify-between items-center gap-3">
                <img src="./assets/github-logo.png" alt="GitHub Logo">
                <h2 class="text-[24px] font-semibold ">GitHub Issues Tracker</h2>
             </div>
 
             <!-- SEARCH -->
             <div class="flex items-center gap-2">
-               <input id="search-input" type="text" 
+               <input id="search-input" type="text"
                   placeholder="Search issues..."
                   class="input input-bordered w-64 h-9">
 
-               <button id="btn-search" class="btn btn-primary btn-sm h-9 px-4">
+               <button id="btn-search"
+                  class="btn btn-primary text-white text-[16px] font-semibold">
                   Search
                </button>
             </div>
@@ -63,10 +64,12 @@
          <!-- TABS -->
          <div class="flex gap-3 mb-6">
 
-            <button id="btn-all" class="btn btn-sm btn-outline">All</button>
-            <button id="btn-open" class="btn btn-sm btn-outline">Open</button>
+            <button id="btn-all"
+               class="btn text-[16px] font-medium btn-outline">All</button>
+            <button id="btn-open"
+               class="btn text-[16px] font-medium btn-outline">Open</button>
             <button id="btn-closed"
-               class="btn btn-sm btn-obutton">Closed</button>
+               class="btn text-[16px] font-medium btn-outline">Closed</button>
 
          </div>
 
@@ -82,8 +85,9 @@
                </div>
 
                <div>
-                  <h2 class="font-semibold text-lg">50 Issues</h2>
-                  <p class="text-sm text-gray-500">Track and manage your project issues</p>
+                  <h2 class="font-semibold text-[20px]">50 Issues</h2>
+                  <p class="text-[16px] font-normal text-[#64748B]">Track and manage your project
+                     issues</p>
                </div>
 
             </div>
@@ -91,11 +95,11 @@
             <!-- RIGHT -->
             <div class="flex gap-3 text-sm">
 
-               <h1 class="px-3 py-1 rounded bg-green-100 text-green-600">
+               <h1 class="text-[12px] font-medium px-3 py-1 rounded bg-green-100 text-green-600">
                   Open
                </h1>
 
-               <h1 class="px-3 py-1 rounded bg-purple-100 text-purple-600">
+               <h1 class="text-[12px] font-medium px-3 py-1 rounded bg-purple-100 text-purple-600">
                   Closed
                </h1>
             </div>
@@ -107,7 +111,6 @@
          </div>
          <div id="issue-container"
             class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-6">
-            
 
             <!-- dynamic cards -->
 
@@ -123,7 +126,7 @@
 
             <div class="modal-action">
                <form method="dialog">
-                  <button class="btn">Close</button>
+                  <button class="btn btn-primary">Close</button>
                </form>
             </div>
 
