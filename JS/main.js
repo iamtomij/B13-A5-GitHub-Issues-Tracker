@@ -70,7 +70,7 @@ const displayIssues = (issues) => {
          
 
 
-         <div class="mb-3 flex flex-wrap gap-1">${issue.labels.map(label =>{
+         <div class="mb-3 flex flex-wrap gap-1">${issue.labels.map(label => {
          let colorClass = "";
          if (label.toLowerCase() === "bug") {
             colorClass = "bg-[#EF444440] text-error-content";
@@ -98,7 +98,8 @@ const displayIssues = (issues) => {
          <button class="text-[10px] px-2 py-[2px] rounded ${colorClass}">
             ${label.toUpperCase()}
          </button>
-         `;}).join("")}
+         `;
+      }).join("")}
          </div>
 
          <hr class="border-gray-200" />
@@ -132,19 +133,80 @@ const loadSingleIssue = async (id) => {
 
 // modal show
 const showModal = (issue) => {
-   modalContent.innerHTML = `
-      <h2 class="text-lg font-bold mb-2">${issue.title}</h2>
-      
-      <p class="text-sm text-gray-500 mb-3">${issue.description}</p>
 
-      <div class="text-sm space-y-2 mt-2">
-         <p><strong>Status:</strong> ${issue.status}</p>
-         <p><strong>Author:</strong> ${issue.author}</p>
-         <p><strong>Priority:</strong> ${issue.priority}</p>
-         <p><strong>Labels:</strong> ${issue.labels.join(", ")}</p>
-         <p><strong>Created At:</strong> ${new Date(issue.createdAt).toLocaleString()}</p>
+   // 🔥 Status color
+   const statusClass = issue.status.toLowerCase() === "open"
+      ? "badge-success"
+      : "badge-primary";
+
+   // 🔥 Priority color
+   let priorityClass = "";
+   if (issue.priority.toLowerCase() === "high") {
+      priorityClass = "badge-error";
+   } else if (issue.priority.toLowerCase() === "medium") {
+      priorityClass = "badge-warning";
+   } else {
+      priorityClass = "badge-success";
+   }
+
+   modalContent.innerHTML = `
+    
+    <!-- Title -->
+    <h2 class="text-xl font-semibold mb-2">
+      ${issue.title}
+    </h2>
+
+    <!-- Status + Meta -->
+    <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+      <span class="badge ${statusClass} badge-sm capitalize">
+        ${issue.status}
+      </span>
+      <span>Opened by ${issue.assignee}</span>
+    </div>
+
+    <!-- Labels -->
+    <div class="mb-3 flex flex-wrap gap-2">
+      ${issue.labels.map(label => {
+
+      let colorClass = "";
+
+      if (label.toLowerCase() === "bug") {
+         colorClass = "bg-red-200 text-red-600";
+      }
+      else if (label.toLowerCase() === "help wanted") {
+         colorClass = "bg-yellow-200 text-yellow-700";
+      }
+      else {
+         colorClass = "bg-gray-200 text-gray-600";
+      }
+
+      return `
+          <span class="text-xs px-2 py-1 rounded-full font-medium ${colorClass}">
+            ${label.toUpperCase()}
+          </span>
+        `;
+   }).join("")}
+    </div>
+    <p class="text-sm text-gray-600 mb-4">
+      ${issue.description}
+    </p>
+    <div class="bg-gray-100 p-4 rounded-lg flex justify-between items-center mb-4">
+      
+      <div>
+        <p class="text-sm text-gray-500">Assignee:</p>
+        <p class="font-semibold">${issue.assignee}</p>
       </div>
-   `;
+
+      <div>
+        <p class="text-sm text-gray-500">Priority:</p>
+        <span class="badge ${priorityClass} badge-sm uppercase">
+          ${issue.priority}
+        </span>
+      </div>
+
+    </div>
+
+  `;
 
    modal.showModal();
 };
