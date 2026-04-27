@@ -4,6 +4,7 @@ const SINGLE_API = "https://phi-lab-server.vercel.app/api/v1/lab/issue/";
 const SEARCH_API = "https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=";
 
 const issueContainer = document.getElementById("issue-container");
+const issueCountTitle = document.getElementById("issue-count");
 const spinner = document.getElementById("spinner");
 
 // modal
@@ -14,6 +15,27 @@ const modalContent = document.getElementById("modal-content");
 const btnAll = document.getElementById("btn-all");
 const btnOpen = document.getElementById("btn-open");
 const btnClosed = document.getElementById("btn-closed");
+
+
+btnAll.addEventListener("click", () => {
+   setActive(btnAll);
+   displayIssues(allIssues);
+   updateTitleCount(allIssues);
+});
+
+btnOpen.addEventListener("click", () => {
+   setActive(btnOpen);
+   const openIssues = allIssues.filter(i => i.status === "open");
+   displayIssues(openIssues);
+   updateTitleCount(openIssues);
+});
+
+btnClosed.addEventListener("click", () => {
+   setActive(btnClosed);
+   const closedIssues = allIssues.filter(i => i.status === "closed");
+   displayIssues(closedIssues);
+   updateTitleCount(closedIssues);
+});
 
 // search
 const searchInput = document.getElementById("search-input");
@@ -37,6 +59,10 @@ const loadIssues = async () => {
    } finally {
       spinner.classList.add("hidden");
    }
+};
+
+const updateTitleCount = (issues) => {
+   issueCountTitle.innerText = `${issues.length} Issues`;
 };
 
 // display issues
