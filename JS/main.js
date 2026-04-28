@@ -37,13 +37,11 @@ btnClosed.addEventListener("click", () => {
    updateTitleCount(closedIssues);
 });
 
-// search
 const searchInput = document.getElementById("search-input");
 const btnSearch = document.getElementById("btn-search");
 
 let allIssues = [];
 
-// load all issues
 const loadIssues = async () => {
    try {
       spinner.classList.remove("hidden");
@@ -65,9 +63,38 @@ const updateTitleCount = (issues) => {
    issueCountTitle.innerText = `${issues.length} Issues`;
 };
 
-// display issues
+// status icon
+const getStatusIcon = (status) => {
+   if (status === "open") {
+      return `
+      <div class="w-6 h-6 flex items-center justify-center rounded-full bg-green-100 text-green-600">
+         <i class="fa-regular fa-circle-dot"></i>
+      </div>`;
+   } else {
+      return `
+      <div class="w-6 h-6 flex items-center justify-center rounded-full bg-purple-100 text-purple-600">
+         <i class="fa-solid fa-circle-check"></i>
+      </div>`;
+   }
+};
+
+// priority badge
+const getPriorityBadge = (priority) => {
+   const p = (priority || "").toLowerCase();
+
+   if (p === "high") {
+      return `<span class="text-[10px] px-3 py-1 rounded-full bg-red-100 text-red-600 font-medium">HIGH</span>`;
+   } else if (p === "medium") {
+      return `<span class="text-[10px] px-3 py-1 rounded-full bg-yellow-100 text-yellow-600 font-medium">MEDIUM</span>`;
+   } else {
+      return `<span class="text-[10px] px-3 py-1 rounded-full bg-gray-200 text-gray-600 font-medium">LOW</span>`;
+   }
+};
+
 const displayIssues = (issues) => {
    issueContainer.innerHTML = "";
+
+   updateTitleCount(issues);
 
    if (issues.length === 0) {
       issueContainer.innerHTML = `<p class="text-center text-gray-500">No issues found</p>`;
@@ -88,57 +115,66 @@ const displayIssues = (issues) => {
       `;
 
       card.innerHTML = `
+
+         <!-- TOP BAR -->
+         <div class="flex justify-between items-center mb-2">
+            ${getStatusIcon(issue.status)}
+            ${getPriorityBadge(issue.priority)}
+         </div>
+
          <h2 class="font-semibold text-[14px] mb-2 line-clamp-1">${issue.title}</h2>
 
          <p class="text-[12px] text-[#64748B] mb-3 line-clamp-2">
-            ${issue.description}...
+            ${issue.description || ""}...
          </p>
-         
 
+         <!-- LABELS -->
+         <div class="mb-4 flex flex-wrap gap-1">
+            ${(issue.labels || []).map(label => {
 
-         <div class="mb-4 flex flex-wrap gap-1">${issue.labels.map(label => {
-         let colorClass = "";
-         if (label.toLowerCase() === "bug") {
-            colorClass = "font-medium bg-red-200 text-red-600 rounded-full px-3 py-2";
-         }
-         else if (label.toLowerCase() === "documentation") {
-            colorClass = "font-medium bg-gray-200 text-black rounded-full";
-         }
-         else if (label.toLowerCase() === "duplicate") {
-            colorClass = "font-medium bg-[#A855F740] text-secondary-content rounded-full";
-         }
-         else if (label.toLowerCase() === "enhancement") {
-            colorClass = "font-medium bg-[#BBF7D0] text-[#00A96E] rounded-full";
-         }
-         else if (label.toLowerCase() === "good first issue") {
-            colorClass = "font-medium bg-[#9CA3AF40] text-accent-content rounded-full";
-         }
-         else if (label.toLowerCase() === "help wanted") {
-            colorClass = "font-medium bg-yellow-200 text-yellow-700 rounded-full px-3 py-2";
-         }
-         else {
-            colorClass = "font-medium bg-gray-200 ";
-         }
+               let colorClass = "";
 
-         return `
-         <button class="text-[10px] px-2 py-[2px] rounded ${colorClass}">
-            ${label.toUpperCase()}
-            
-         </button>
-         `;
-      }).join("")}
+               if (label.toLowerCase() === "bug") {
+                  colorClass = "bg-red-200 text-red-600";
+               }
+               else if (label.toLowerCase() === "documentation") {
+                  colorClass = "bg-gray-200 text-black";
+               }
+               else if (label.toLowerCase() === "duplicate") {
+                  colorClass = "bg-purple-100 text-purple-600";
+               }
+               else if (label.toLowerCase() === "enhancement") {
+                  colorClass = "bg-green-100 text-green-600";
+               }
+               else if (label.toLowerCase() === "good first issue") {
+                  colorClass = "bg-gray-100 text-gray-600";
+               }
+               else if (label.toLowerCase() === "help wanted") {
+                  colorClass = "bg-yellow-200 text-yellow-700";
+               }
+               else {
+                  colorClass = "bg-gray-200 text-gray-600";
+               }
+
+               return `
+               <button class="text-[10px] px-2 py-[2px] rounded-full font-medium ${colorClass}">
+                  ${label.toUpperCase()}
+               </button>
+               `;
+            }).join("")}
          </div>
 
          <hr class="border-gray-200 " />
 
+         <!-- FOOTER -->
          <div class="text-xs space-y-2 mt-2">
-            
-            <p class="font-normal text-[12px] text-[#64748B]"># ${issue.author}</p>
-            <p class="font-normal text-[12px] text-[#64748B]"> ${new Date(issue.createdAt).toLocaleString()}</p>
+            <p class="text-[12px] text-[#64748B]"># ${issue.author}</p>
+            <p class="text-[12px] text-[#64748B]">
+               ${new Date(issue.createdAt).toLocaleString()}
+            </p>
          </div>
       `;
 
-      // modal click
       card.addEventListener("click", () => {
          loadSingleIssue(issue.id);
       });
@@ -147,7 +183,6 @@ const displayIssues = (issues) => {
    });
 };
 
-// single issue
 const loadSingleIssue = async (id) => {
    try {
       const res = await fetch(SINGLE_API + id);
@@ -236,7 +271,6 @@ const showModal = (issue) => {
    modal.showModal();
 };
 
-// active button
 const setActive = (activeBtn) => {
    [btnAll, btnOpen, btnClosed].forEach(btn => {
       btn.classList.remove("btn-primary");
@@ -247,7 +281,6 @@ const setActive = (activeBtn) => {
    activeBtn.classList.add("btn-primary");
 };
 
-// tabs
 btnAll.addEventListener("click", () => {
    setActive(btnAll);
    displayIssues(allIssues);
@@ -265,7 +298,6 @@ btnClosed.addEventListener("click", () => {
    displayIssues(closedIssues);
 });
 
-// search functionality
 btnSearch.addEventListener("click", async () => {
    const text = searchInput.value.trim();
 
@@ -285,13 +317,11 @@ btnSearch.addEventListener("click", async () => {
    }
 });
 
-// enter press search
 searchInput.addEventListener("keypress", (e) => {
    if (e.key === "Enter") {
       btnSearch.click();
    }
 });
 
-// initial load
 loadIssues();
 setActive(btnAll);
