@@ -8,8 +8,6 @@ loginBtn.addEventListener("click", function () {
    if (username === "admin" && password === "admin123") {
 
 
-      localStorage.setItem("isLoggedIn", "true");
-
       window.location.href = "main.html";
 
    } else {

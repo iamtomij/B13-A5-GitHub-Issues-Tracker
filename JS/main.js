@@ -78,16 +78,16 @@ const getStatusIcon = (status) => {
    }
 };
 
-// priority badge
+
 const getPriorityBadge = (priority) => {
    const p = (priority || "").toLowerCase();
 
    if (p === "high") {
-      return `<span class="text-[10px] px-3 py-1 rounded-full bg-red-100 text-red-600 font-medium">HIGH</span>`;
+      return `<span class="text-[12px] px-3 py-1 rounded-full bg-red-100 text-red-600 font-medium">HIGH</span>`;
    } else if (p === "medium") {
-      return `<span class="text-[10px] px-3 py-1 rounded-full bg-yellow-100 text-yellow-600 font-medium">MEDIUM</span>`;
+      return `<span class="text-[12px] px-3 py-1 rounded-full bg-yellow-100 text-yellow-600 font-medium">MEDIUM</span>`;
    } else {
-      return `<span class="text-[10px] px-3 py-1 rounded-full bg-gray-200 text-gray-600 font-medium">LOW</span>`;
+      return `<span class="text-[12px] px-3 py-1 rounded-full bg-gray-200 text-gray-600 font-medium">LOW</span>`;
    }
 };
 
@@ -116,7 +116,6 @@ const displayIssues = (issues) => {
 
       card.innerHTML = `
 
-         <!-- TOP BAR -->
          <div class="flex justify-between items-center mb-2">
             ${getStatusIcon(issue.status)}
             ${getPriorityBadge(issue.priority)}
@@ -128,40 +127,39 @@ const displayIssues = (issues) => {
             ${issue.description || ""}...
          </p>
 
-         <!-- LABELS -->
          <div class="mb-4 flex flex-wrap gap-1">
             ${(issue.labels || []).map(label => {
 
-               let colorClass = "";
+         let colorClass = "";
 
-               if (label.toLowerCase() === "bug") {
-                  colorClass = "bg-red-200 text-red-600";
-               }
-               else if (label.toLowerCase() === "documentation") {
-                  colorClass = "bg-gray-200 text-black";
-               }
-               else if (label.toLowerCase() === "duplicate") {
-                  colorClass = "bg-purple-100 text-purple-600";
-               }
-               else if (label.toLowerCase() === "enhancement") {
-                  colorClass = "bg-green-100 text-green-600";
-               }
-               else if (label.toLowerCase() === "good first issue") {
-                  colorClass = "bg-gray-100 text-gray-600";
-               }
-               else if (label.toLowerCase() === "help wanted") {
-                  colorClass = "bg-yellow-200 text-yellow-700";
-               }
-               else {
-                  colorClass = "bg-gray-200 text-gray-600";
-               }
+         if (label.toLowerCase() === "bug") {
+            colorClass = "bg-red-200 text-red-600";
+         }
+         else if (label.toLowerCase() === "documentation") {
+            colorClass = "bg-gray-200 text-black";
+         }
+         else if (label.toLowerCase() === "duplicate") {
+            colorClass = "bg-purple-100 text-purple-600";
+         }
+         else if (label.toLowerCase() === "enhancement") {
+            colorClass = "bg-green-100 text-green-600";
+         }
+         else if (label.toLowerCase() === "good first issue") {
+            colorClass = "bg-gray-100 text-gray-600";
+         }
+         else if (label.toLowerCase() === "help wanted") {
+            colorClass = "bg-yellow-200 text-yellow-700";
+         }
+         else {
+            colorClass = "bg-gray-200 text-gray-600";
+         }
 
-               return `
+         return `
                <button class="text-[10px] px-2 py-[2px] rounded-full font-medium ${colorClass}">
                   ${label.toUpperCase()}
                </button>
                `;
-            }).join("")}
+      }).join("")}
          </div>
 
          <hr class="border-gray-200 " />
@@ -200,33 +198,34 @@ const showModal = (issue) => {
       : "badge-primary";
 
    let priorityClass = "";
-   if (issue.priority.toLowerCase() === "high") {
-      priorityClass = "badge-error";
-   } else if (issue.priority.toLowerCase() === "medium") {
-      priorityClass = "badge-warning";
+   const p = (issue.priority || "").toLowerCase();
+
+   if (p === "high") {
+      priorityClass = "bg-red-100 text-red-600 font-medium border-none"; 
+   } else if (p === "medium") {
+      priorityClass = "bg-yellow-200 text-yellow-700 text-[14px] font-medium border-none"; 
+   } else if (p === "low") {
+      priorityClass = "bg-gray-200 text-gray-600 font-medium border-none"; 
    } else {
-      priorityClass = "badge-success";
+      priorityClass = "bg-gray-300 text-gray-800 border-none";
    }
 
    modalContent.innerHTML = `
-    
-    <!-- Title -->
-    <h2 class="text-[24px] font-bold mb-2">
-      ${issue.title}
-    </h2>
-
-    <!-- Status + Meta -->
-    <div class="flex items-center gap-7 text-sm text-gray-500 mb-3 ">
-      <span class="badge ${statusClass} badge-md rounded-3xl font-medium text-[12px] capitalize">
-        ${issue.status}
-      </span>
-      <span class="text-[12px] font-normal">Opened by ${issue.author}</span>
-      <span class="text-[12px] font-normal">${issue.createdAt}</span>
-    </div>
-
-    <!-- Labels -->
-    <div class="mb-3 flex flex-wrap gap-2">
-      ${issue.labels.map(label => {
+     
+     <h2 class="text-[24px] font-bold mb-2">
+       ${issue.title}
+     </h2>
+ 
+     <div class="flex items-center gap-7 text-sm text-gray-500 mb-3 ">
+       <span class="badge ${statusClass} badge-md rounded-3xl font-medium text-[12px] capitalize">
+         ${issue.status}
+       </span>
+       <span class="text-[12px] font-normal">Opened by ${issue.author}</span>
+       <span class="text-[12px] font-normal">${issue.createdAt}</span>
+     </div>
+ 
+     <div class="mb-3 flex flex-wrap gap-2">
+       ${issue.labels.map(label => {
 
       let colorClass = "";
 
@@ -241,32 +240,32 @@ const showModal = (issue) => {
       }
 
       return `
-          <span class="text-xs px-2 py-1 rounded-full font-medium ${colorClass}">
-            ${label.toUpperCase()}
-          </span>
-        `;
+           <span class="text-xs px-2 py-1 rounded-full font-medium ${colorClass}">
+             ${label.toUpperCase()}
+           </span>
+         `;
    }).join("")}
-    </div>
-    <p class="text-sm text-gray-600 mb-4">
-      ${issue.description}
-    </p>
-    <div class="bg-gray-100 p-4 rounded-lg flex items-center gap-20 mb-4">
-      
-      <div>
-        <p class="text-sm text-gray-500">Assignee:</p>
-        <p class="font-semibold">${issue.assignee}</p>
-      </div>
-
-      <div>
-        <p class="text-sm text-gray-500">Priority:</p>
-        <span class="badge ${priorityClass} badge-sm uppercase">
-          ${issue.priority}
-        </span>
-      </div>
-
-    </div>
-
-  `;
+     </div>
+     <p class="text-sm text-gray-600 mb-4">
+       ${issue.description}
+     </p>
+     <div class="bg-gray-100 p-4 rounded-lg flex items-center gap-20 mb-4">
+       
+       <div>
+         <p class="text-sm text-gray-500">Assignee:</p>
+         <p class="font-semibold">${issue.assignee}</p>
+       </div>
+ 
+       <div>
+         <p class="text-sm text-gray-500">Priority:</p>
+         <span class="badge ${priorityClass} badge-md rounded-3xl uppercase font-bold px-4">
+           ${issue.priority}
+         </span>
+       </div>
+ 
+     </div>
+ 
+   `;
 
    modal.showModal();
 };
